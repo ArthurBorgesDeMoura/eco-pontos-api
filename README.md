@@ -192,24 +192,6 @@ O script tem só 15 pontos, pouco para medir. O `../db/desempenho.sql` cria um b
 
 Para usar a API inteira com esse banco, rode-a com `ECOPONTO_DB_NOME=ecoponto_desempenho`.
 
-## Antes da entrega
-
-O roteiro de ponta a ponta (`RoteiroDePontaAPontaIT`) faz, pela API, o caminho todo:
-
-1. cadastra uma conta e entra;
-2. busca, filtra e abre um detalhe;
-3. sugere um ponto;
-4. o admin aprova, edita e exclui o ponto;
-5. as duas contas saem.
-
-Ele exige o banco como o script deixa e apaga no fim o que criou. Antes da entrega, rode-o num banco recém-criado:
-
-1. Recarregue o banco do zero (veja abaixo).
-2. Rode a preparação das contas (passo 3).
-3. Rode `./mvnw verify -Pbanco`. Ele roda o roteiro e os outros testes com o banco.
-
-As provas do RNF03 (senha, acesso, consultas, ataques e segredos) estão em [`docs/seguranca.md`](../docs/seguranca.md).
-
 ## Recarregar o banco do zero
 
 - **Com Docker:** `docker compose down -v` apaga o volume, e `docker compose up -d` cria tudo de novo.
@@ -224,8 +206,3 @@ O `CREATE USER IF NOT EXISTS` não muda a senha de um usuário que já existe, e
 - **Sem Docker:** `mariadb -u root -p -e "ALTER USER 'ecoponto_app'@'localhost' IDENTIFIED BY 'SENHA_NOVA';"`.
 
 Com a senha antiga no banco, a API recebe "Access denied", o `/api/saude` responde 503 e os testes `-Pbanco` falham.
-
-## Avisos
-
-- O Spring Boot 3.3 está sem suporte gratuito desde 30/06/2025 e sem o comercial desde 30/06/2026. O Spring Framework 6.1 e o Spring Security 6.3 não recebem mais correções de segurança. O Tomcat foi atualizado à mão para 10.1.61 (`tomcat.version` no `pom.xml`).
-- O `./mvnw` precisa do fim de linha LF e da permissão de execução. Um repositório criado no Windows grava o `mvnw` sem essa permissão; rode `git update-index --chmod=+x backend/mvnw` antes do primeiro commit, ou `chmod +x mvnw` depois de clonar no Linux ou no macOS.
